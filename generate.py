@@ -10,6 +10,7 @@ streets = []
 logins = []
 firstnames = []
 lastnames = []
+boolean_array = ["TRUE", "FALSE"]
 rodzaj_dzialu = ["SERWIS", "SERWIS MAGAZYN", "WYPOZYCZALNIA"]
 
 with open('cities.txt', 'r') as f:
@@ -41,6 +42,11 @@ KIEROWNIK_count = 0
 PRACOWNIK_SZEREGOWY_count = 0
 KLIENT_INSTYTUCJONALNY_count = 0
 ZGLOSZENIE_ZEWNETRZNE_count = 0
+BADANIE_OKRESOWE_count = 0
+NAPRAWA_count = 0
+PRZYGOTOWANIE_DO_SEZONU_count = 0
+ZAMOWIENIE_WEWNETRZNE_count = 0
+ZAMOWIENIE_ZEWNETRZNE_count = 0
 
 def addZeroChar(var):
     if var < 10:
@@ -177,6 +183,42 @@ def generateZGLOSZENIE(data, count):
 
         data += query
 
+        if i % 4 == 0: # BADANIE OKRESOWE
+            global BADANIE_OKRESOWE_count
+            BADANIE_OKRESOWE_count += 1
+
+            query = "INSERT INTO \"public\".\"BADANIE OKRESOWE\"(id, \"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
+                    "VALUES (%s, %s, %s, %s); \n" \
+                    % (str(BADANIE_OKRESOWE_count), str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)] )
+
+        elif i % 4 == 1: # NAPRAWA
+            global NAPRAWA_count
+            NAPRAWA_count += 1
+
+            query = "INSERT INTO \"public\".\"NAPRAWA\"(id, \"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
+                    "VALUES (%s, %s, %s, %s);\n" \
+                    % (str(NAPRAWA_count), str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)] )
+
+        elif i % 4 == 2: # PRZYGOTOWANIE DO SEZONU
+            global PRZYGOTOWANIE_DO_SEZONU_count
+            PRZYGOTOWANIE_DO_SEZONU_count += 1
+
+            query = "INSERT INTO \"public\".\"PRZYGOTOWANIE DO SEZONU\"(id, \"id_ZGLOSZENIE\") " \
+                    "VALUES (%s, %s);\n" \
+                    % (str(PRZYGOTOWANIE_DO_SEZONU_count), str(i))
+
+        elif i % 4 == 3:
+            global ZAMOWIENIE_WEWNETRZNE_count
+            ZAMOWIENIE_WEWNETRZNE_count += 1
+            query = "INSERT INTO \"public\".\"ZAMOWIENIE WEWNETRZNE\"(id, \"id_ZGLOSZENIE\", \"id_SERWIS MAGAZYN\", \"id_PRACOWNIK SZEREGOWY\")" \
+                    "VALUES (%s, %s, %s, %s);\n" \
+                    % (str(ZAMOWIENIE_WEWNETRZNE_count), str(i), str(random.randint(1, SERWIS_MAGAZYN_count)),
+                       str(random.randint(1, PRACOWNIK_SZEREGOWY_count)))
+
+        data += query
+
+
+
     global ZGLOSZENIE_count
     ZGLOSZENIE_count = count
     return data
@@ -264,6 +306,17 @@ def generateZGLOSZENIE_ZEWNETRZNE(data):
 
     return data
 
+def generateZAMOWIENIE_ZEWNETRZNE(data, count):
+    for i in xrange(1, count + 1):
+        query = "INSERT INTO \"public\".\"ZAMOWIENIE ZEWNETRZNE\"(id, \"id_SERWIS MAGAZYN\") " \
+                "VALUES (%s, %s);\n" \
+                % (str(i), str(random.randint(1, SERWIS_MAGAZYN_count)))
+
+        data += query
+    global ZAMOWIENIE_ZEWNETRZNE_count
+    ZAMOWIENIE_ZEWNETRZNE_count = count
+    return data
+
 
 def openFile(filename):
     with open(filename) as f:
@@ -323,10 +376,11 @@ if __name__ == "__main__":
     data = generateDANE_KONTAKTOWE(data, 10000)
     data = generateKLIENT_INDYWIDUALNY(data, 10000)
     data = generatePLACOWKA(data, 200)
-    data = generateZGLOSZENIE(data, 20000)
     data = generateKIEROWNIK(data, 600)
+    data = generateZGLOSZENIE(data, 20000)
     data = generateKLIENT_INSTYTUCJONALNY(data, 10000)
     data = generateZGLOSZENIE_ZEWNETRZNE(data)
+    data = generateZAMOWIENIE_ZEWNETRZNE(data, 5000)
     data = data.decode('latin-1').encode("utf-8")
     save_data(insertsFilename, data)
 
