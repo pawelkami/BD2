@@ -1,0 +1,69 @@
+Acura
+Alfa Romeo
+Aston Martin
+Audi
+Bentley
+BMW
+Buick
+Cadillac
+Chevrolet
+China Geely Group
+Chrysler
+Citroën
+DAV
+Daewoo
+Daihatsu
+Daimler
+DeTomaso
+Dodge
+Eagle
+Ferrari
+Fiat
+Ford
+General Motors
+GMC Trucks
+Holden
+Honda
+Hummer
+Hyundai
+Infiniti
+Isuzu
+Jaguar
+Jeep
+Kia
+Lamborghini
+Lancia
+Land Rover
+Lexus
+Lincoln
+Lotus
+Maserati
+Mazda
+Mercedes-Benz
+Mercury
+MG
+Mini
+Mitsubishi
+Nissan
+Oldsmobile
+Peugeot
+Plymouth
+Pontiac
+Porche
+Renault
+Rolls-Royce
+Saab
+Saleen
+Saturn
+Scion
+SEAT
+Skoda
+Smart
+Subaru
+Suzuki
+Spyker
+TaTa
+Toyota
+Vauxhall
+Volkswagen
+Volvo
