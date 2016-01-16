@@ -14,7 +14,8 @@ cars = []
 boolean_array = ["TRUE", "FALSE"]
 rodzaj_dzialu = ["SERWIS", "SERWIS MAGAZYN", "WYPOZYCZALNIA"]
 rodzaj_samochodu = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K']
-
+historia_naprawy = ["wymiana lozysk", "wymiana akumulatora", "wymiana silnika", "wymiana paska rozrzadu", "wymiana alternatora", "lakierowanie",
+                    "wymiana reflektorow", "wymiana klockow hamulcowych", "wymiana tarcz hamulcowych"]
 czesc_samochodowa = {'AMORTYZATOR':["gazowy", "olejowy"], 'SILNIK':["diesel", "benzyna", "LPG", "hybrydowy", "elektryczny"],
                      'SKRZYNIA BIEGOW':["automatyczna", "manualna"], 'REFLEKTOR': ["przedni", "tylny"], "OPONA": ["zimowa", "letnia"]}
 
@@ -64,6 +65,9 @@ ZAMOWIENIE_WEWNETRZNE_count = 0
 ZAMOWIENIE_ZEWNETRZNE_count = 0
 SAMOCHOD_count = 0
 REZERWACJA_count = 0
+SKIEROWANIE_NA_BADANIE_count = 0
+WYPOZYCZENIE_count = 0
+ZEWNETRZNY_DOWSTAWCA_count = 0
 
 def addZeroChar(var):
     if var < 10:
@@ -93,7 +97,7 @@ def generateTimestamp():
     mm = addZeroChar(month)
 
     day = random.randint(1,28)
-    dd = str(day)
+    dd = addZeroChar(day)
 
     hour = random.randint(0,23)
     hh = addZeroChar(hour)
@@ -108,6 +112,28 @@ def generateTimestamp():
 
     return timestamp
 
+# timestamp, do którego można dodać określoną liczbę dni/miesięcy/lat
+def addToTimestamp(timestamp, days, months=0, years=0):
+    newTimestamp = str(timestamp)
+
+    year = int(timestamp[:4])
+    month = int(timestamp[5:7])
+    day = int(timestamp[8:10])
+    time = timestamp[11:]
+
+    year += years
+    month += months
+
+    day += days
+    while day > 28:
+        day -= 28
+        month += 1
+
+    while month > 12:
+        month -= 12
+        year += 1
+
+    return "%s-%s-%s %s" % (str(year), addZeroChar(month), addZeroChar(day), time)
 
 
 def generateDANE_KONTAKTOWE(data, count):
@@ -215,6 +241,7 @@ def generateZGLOSZENIE(data, count):
             query = "INSERT INTO \"public\".\"NAPRAWA\"(id, \"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
                     "VALUES (%s, %s, %s, %s);\n" \
                     % (str(NAPRAWA_count), str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)])
+
 
         elif i % 4 == 2: # PRZYGOTOWANIE DO SEZONU
             global PRZYGOTOWANIE_DO_SEZONU_count
@@ -380,7 +407,7 @@ def generateCZESCI_EKSPLOATACYJNE(data, count):
     return data
 
 def generateSAMOCHOD(data, count):
-    for i in xrange(1, count):
+    for i in xrange(1, count+1):
         rodzaj = rodzaj_samochodu[random.randint(0, len(rodzaj_samochodu)-1)]
         moc = random.randint(70, 350)
         color = kolor[random.randint(0, len(kolor)-1)]
@@ -406,7 +433,7 @@ def generateSAMOCHOD(data, count):
     return data
 
 def generateREZERWACJA(data, count):
-    for i in xrange(1, count):
+    for i in xrange(1, count+1):
         czy_internetowo = boolean_array[random.randint(0,len(boolean_array)-1)]
         czy_potwierdzono = boolean_array[random.randint(0,len(boolean_array)-1)]
         wypozyczalnia = str(random.randint(1, WYPOZYCZALNIA_count))
@@ -434,6 +461,74 @@ def generateREZERWACJA(data, count):
     REZERWACJA_count = count
     return data
 
+def generateHISTORIA_NAPRAWY(data):
+    for i in xrange(1, NAPRAWA_count+1):
+        opis = historia_naprawy[random.randint(0, len(historia_naprawy)-1)]
+        query = "INSERT INTO \"public\".\"HISTORIA NAPRAWY\"(id, \"id_SAMOCHOD\", opis, data, \"id_NAPRAWA\") " \
+                "VALUES (%s, %s, '%s', '%s', %s);\n" \
+                % (str(i), random.randint(1, SAMOCHOD_count), opis, generateTimestamp(), str(i))
+
+        data += query
+    return data
+
+def generateSKIEROWANIE_NA_BADANIE(data, count):
+    for i in xrange(1, count+1):
+        pracownik = str(random.randint(1, PRACOWNIK_SZEREGOWY_count))
+        samochod = str(random.randint(1, SAMOCHOD_count))
+        czy_zaakceptowano = boolean_array[random.randint(0,1)]
+        query = "INSERT INTO \"public\".\"SKIEROWANIE NA BADANIE\"(id, czy_zaakceptowano, \"id_KIEROWNIK\", " \
+                "\"id_PRACOWNIK SZEREGOWY\", \"id_SERWIS\", \"id_SAMOCHOD\")" \
+                "SELECT %s, %s, \"PRACOWNIK SZEREGOWY\".\"id_KIEROWNIK\", id, \"PRACOWNIK SZEREGOWY\".\"id_PLACOWKA\", %s " \
+                "FROM \"PRACOWNIK SZEREGOWY\" WHERE id=%s;\n"\
+                % (str(i), czy_zaakceptowano, samochod, pracownik)
+
+        data += query
+    global SKIEROWANIE_NA_BADANIE_count
+    SKIEROWANIE_NA_BADANIE_count = count
+    return data
+
+def generateWYPOZYCZENIE(data, count):
+    for i in xrange(1, count+1):
+        data_wypozyczenia = generateTimestamp()
+        data_zwrotu = addToTimestamp(data_wypozyczenia, random.randint(1,28), random.randint(1, 12), random.randint(0,1))
+
+        if i >= SAMOCHOD_count:
+            count = i
+            break
+
+        samochod = str(i)
+
+
+
+        klient_instytucjonalny = "NULL"
+        klient_indywidualny = "NULL"
+
+        if i < KLIENT_INDYWIDUALNY_count:
+            klient_indywidualny = str(i)
+        else:
+            klient_instytucjonalny = str(random.randint(1, KLIENT_INSTYTUCJONALNY_count))
+
+        query = "INSERT INTO \"public\".\"WYPOZYCZENIE\"(id, data_wypozyczenia, data_zwrotu, \"id_SAMOCHOD\", " \
+                "\"id_KLIENT INDYWIDUALNY\", \"id_KLIENT INSTYTUCJONALNY\")" \
+                "VALUES (%s, '%s', '%s', %s, %s, %s);\n" \
+                % (str(i), data_wypozyczenia, data_zwrotu, samochod, klient_indywidualny, klient_instytucjonalny )
+
+        data += query
+
+    global WYPOZYCZENIE_count
+    WYPOZYCZENIE_count = count
+    return data
+
+def generateZEWNETRZNY_DOSTAWCA(data):
+    for i in xrange(0, len(cars)-1):
+        query = "INSERT INTO \"public\".\"ZEWNETRZNY DOSTAWCA\"(id, nazwa) " \
+                "VALUES (%s, '%s');\n" \
+                % (str(i+1), cars[i])
+
+        data += query
+    global ZEWNETRZNY_DOWSTAWCA_count
+    ZEWNETRZNY_DOWSTAWCA_count = len(cars)
+    return data
 
 
 
@@ -505,6 +600,10 @@ if __name__ == "__main__":
     data = generateCZESCI_EKSPLOATACYJNE(data, 100)
     data = generateSAMOCHOD(data, 15000)
     data = generateREZERWACJA(data, 3000)
+    data = generateHISTORIA_NAPRAWY(data)
+    data = generateSKIEROWANIE_NA_BADANIE(data, 1000)
+    data = generateWYPOZYCZENIE(data, 10000)
+    data = generateZEWNETRZNY_DOSTAWCA(data)
     data = data.decode('latin-1').encode("utf-8")
     save_data(insertsFilename, data)
 
