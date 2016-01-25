@@ -66,6 +66,7 @@ REZERWACJA_count = 0
 SKIEROWANIE_NA_BADANIE_count = 0
 WYPOZYCZENIE_count = 0
 ZEWNETRZNY_DOWSTAWCA_count = 0
+CZESC_SAMOCHODOWA_count = 0
 
 def addZeroChar(var):
     if var < 10:
@@ -352,6 +353,18 @@ def generateZGLOSZENIE_ZEWNETRZNE(data):
 
     return data
 
+def generateZEWNETRZNY_DOSTAWCA(data):
+    for i in xrange(0, len(cars)-1):
+        query = "INSERT INTO \"public\".\"ZEWNETRZNY DOSTAWCA\"(id, nazwa) " \
+                "VALUES (%s, '%s');\n" \
+                % (str(i+1), cars[i])
+
+        data += query
+    global ZEWNETRZNY_DOWSTAWCA_count
+    ZEWNETRZNY_DOWSTAWCA_count = len(cars)-1
+    return data
+
+
 def generateZAMOWIENIE_ZEWNETRZNE(data, count):
     for i in xrange(1, count + 1):
         query = "INSERT INTO \"public\".\"ZAMOWIENIE ZEWNETRZNE\"(id, \"id_SERWIS MAGAZYN\") " \
@@ -359,6 +372,13 @@ def generateZAMOWIENIE_ZEWNETRZNE(data, count):
                 % (str(i), str(random.randint(1, SERWIS_MAGAZYN_count)))
 
         data += query
+
+        zamowienie_czesc = "INSERT INTO \"ZAMOWIENIE_ZEWNETRZNE_ZEWNETRZNY_DOSTAWCA\"" \
+                           "(\"id_ZAMOWIENIE ZEWNETRZNE\", \"id_ZEWNETRZNY DOSTAWCA\") " \
+                           "VALUES (%s, %s);\n" \
+                           % (str(i), random.randint(1, ZEWNETRZNY_DOWSTAWCA_count))
+        data += zamowienie_czesc
+
     global ZAMOWIENIE_ZEWNETRZNE_count
     ZAMOWIENIE_ZEWNETRZNE_count = count
     return data
@@ -387,7 +407,16 @@ def generateCZESCI_SAMOCHODOWE(data, count):
                                   % (random.randint(1, SERWIS_MAGAZYN_count), str(j))
 
             data += serwismagazyn_czesc
+            if random.randint(0,1):
+                zamowienie_zewnetrzne_czesc = "INSERT INTO \"ZAMOWIENIE_ZEWNETRZNE_CZESC_SAMOCHODOWA\"" \
+                                              "(\"id_ZAMOWIENIE ZEWNETRZNE\", \"id_CZESC SAMOCHODOWA\", ilosc) " \
+                                              "VALUES (%s, %s, %s)\n;" \
+                                              % (random.randint(1,ZAMOWIENIE_ZEWNETRZNE_count), str(j), random.randint(1,10))
+                data += zamowienie_zewnetrzne_czesc
+
         i += 1
+    global CZESC_SAMOCHODOWA_count
+    CZESC_SAMOCHODOWA_count = count
     return data
 
 
@@ -414,6 +443,13 @@ def generateCZESCI_EKSPLOATACYJNE(data, count):
                                   "VALUES (%s, %s);\n" \
                                   % (random.randint(1, SERWIS_MAGAZYN_count), str(j))
             data += serwismagazyn_czesc
+
+            if random.randint(0,1):
+                zamowienie_zewnetrzne_czesc = "INSERT INTO \"ZAMOWIENIE_ZEWNETRZNE_CZESC_EKSPLOATACYJNA\"" \
+                                              "(\"id_ZAMOWIENIE ZEWNETRZNE\", \"id_CZESC EKSPLOATACYJNA\") " \
+                                              "VALUES (%s, %s)\n;" \
+                                              % (random.randint(1,ZAMOWIENIE_ZEWNETRZNE_count), str(j))
+                data += zamowienie_zewnetrzne_czesc
         i += 1
     return data
 
@@ -530,16 +566,6 @@ def generateWYPOZYCZENIE(data, count):
     WYPOZYCZENIE_count = count
     return data
 
-def generateZEWNETRZNY_DOSTAWCA(data):
-    for i in xrange(0, len(cars)-1):
-        query = "INSERT INTO \"public\".\"ZEWNETRZNY DOSTAWCA\"(id, nazwa) " \
-                "VALUES (%s, '%s');\n" \
-                % (str(i+1), cars[i])
-
-        data += query
-    global ZEWNETRZNY_DOWSTAWCA_count
-    ZEWNETRZNY_DOWSTAWCA_count = len(cars)
-    return data
 
 
 
@@ -605,6 +631,7 @@ if __name__ == "__main__":
     data = generateKIEROWNIK(data, 600)
     data = generateZGLOSZENIE(data, 20000)
     data = generateKLIENT_INSTYTUCJONALNY(data, 10000)
+    data = generateZEWNETRZNY_DOSTAWCA(data)
     data = generateZGLOSZENIE_ZEWNETRZNE(data)
     data = generateZAMOWIENIE_ZEWNETRZNE(data, 5000)
     data = generateCZESCI_SAMOCHODOWE(data, 100)
@@ -614,7 +641,6 @@ if __name__ == "__main__":
     data = generateHISTORIA_NAPRAWY(data)
     data = generateSKIEROWANIE_NA_BADANIE(data, 1000)
     data = generateWYPOZYCZENIE(data, 10000)
-    data = generateZEWNETRZNY_DOSTAWCA(data)
     data = data.decode('latin-1').encode("utf-8")
     save_data(insertsFilename, data)
 
