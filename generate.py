@@ -28,11 +28,9 @@ model = ["One", "Two", "Three"]
 
 with open('cities.txt', 'r') as f:
     cities = f.read().splitlines()
+
 with open('streets.txt', 'r') as f:
     streets = f.read().splitlines()
-
-with open('usernames.txt', 'r') as f:
-    logins = f.read().splitlines()
 
 with open('firstnames.txt', 'r') as f:
     firstnames = f.read().splitlines()
@@ -382,6 +380,13 @@ def generateCZESCI_SAMOCHODOWE(data, count):
                           "VALUES (%s, %s, '%s', %s, %s);\n" \
                           % (str((i-1)*count + j), str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
             data += czesc_query
+
+            serwismagazyn_czesc = "INSERT INTO \"SERWIS_MAGAZYN_CZESC_SAMOCHODOWA\"" \
+                                  "(\"id_SERWIS MAGAZYN\", \"id_CZESC SAMOCHODOWA\") " \
+                                  "VALUES (%s, %s);\n" \
+                                  % (random.randint(1, SERWIS_MAGAZYN_count), str(j))
+
+            data += serwismagazyn_czesc
         i += 1
     return data
 
@@ -403,6 +408,12 @@ def generateCZESCI_EKSPLOATACYJNE(data, count):
                           "VALUES (%s, %s, '%s', %s, %s);\n" \
                           % (str((i-1)*count + j), str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
             data += czesc_query
+
+            serwismagazyn_czesc = "INSERT INTO \"SERWIS_MAGAZYN_CZESC_EKSPLOATACYJNA\"" \
+                                  "(\"id_SERWIS MAGAZYN\", \"id_CZESC EKSPLOATACYJNA\") " \
+                                  "VALUES (%s, %s);\n" \
+                                  % (random.randint(1, SERWIS_MAGAZYN_count), str(j))
+            data += serwismagazyn_czesc
         i += 1
     return data
 
