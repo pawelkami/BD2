@@ -646,7 +646,8 @@ CREATE TABLE public."WYPOZYCZENIE"(
 	data_zwrotu timestamp NOT NULL,
 	"id_SAMOCHOD" integer NOT NULL,
 	"id_KLIENT INDYWIDUALNY" integer,
-	"id_KLIENT INSTYTUCJONALNY" integer
+	"id_KLIENT INSTYTUCJONALNY" integer,
+	CONSTRAINT "WYPOZYCZENIE_PK" PRIMARY KEY (id)
 );
 -- ddl-end --
 ALTER TABLE public."WYPOZYCZENIE" OWNER TO postgres;

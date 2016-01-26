@@ -458,7 +458,7 @@ def generateSAMOCHOD(data, count):
         rodzaj = rodzaj_samochodu[random.randint(0, len(rodzaj_samochodu)-1)]
         moc = random.randint(70, 350)
         color = kolor[random.randint(0, len(kolor)-1)]
-        rocznik = str(random.randint(2000, 2016))
+        rocznik = str(random.randint(2012, 2016))
         automat = boolean_array[random.randint(0,len(boolean_array)-1)]
         pojemnosc = str(round(random.uniform(1.0, 5.0), 3))
         marka = cars[random.randint(0, len(cars)-1)]
@@ -550,7 +550,7 @@ def generateWYPOZYCZENIE(data, count):
         klient_instytucjonalny = "NULL"
         klient_indywidualny = "NULL"
 
-        if i < KLIENT_INDYWIDUALNY_count:
+        if random.randint(0,1):
             klient_indywidualny = str(i)
         else:
             klient_instytucjonalny = str(random.randint(1, KLIENT_INSTYTUCJONALNY_count))
@@ -567,9 +567,6 @@ def generateWYPOZYCZENIE(data, count):
     return data
 
 
-
-
-
 def openFile(filename):
     with open(filename) as f:
         data = f.read()
@@ -579,6 +576,7 @@ if __name__ == "__main__":
     insertsFilename = "inserts.sql"
 
     databaseScript = openFile("database.sql")
+    procedures = openFile("procedures.sql")
 
     print("Podaj dane do zalogowania się na serwerze. W nawiasach są proponowane wartości.")
     dbname = raw_input("Nazwa nowej bazy danych[wypozyczalniaDB]: ").lower()
@@ -621,6 +619,7 @@ if __name__ == "__main__":
     cur = conn.cursor()
     print("Creating tables in database...")
     cur.execute(databaseScript)
+    cur.execute(procedures)
 
 
     data = ""
