@@ -14,9 +14,8 @@ GROUP BY "rodzaj"
 ORDER BY "rodzaj";
 
 --Wsyzstkie samochody, ktore mozna sprzedac
-SELECT S."wartosc", S."rodzaj", S."moc", S."kolor", S."rocznik", S."automatyczna_skrzynia", S."pojemnosc_silnika", S."marka", S."model",
+SELECT S."marka", S."model", S."wartosc", S."rodzaj", S."moc", S."kolor", S."rocznik", S."automatyczna_skrzynia", S."pojemnosc_silnika", 
 	D."ulica", D."numer domu", D."numer lokalu", D."telefon"
-FROM "SAMOCHOD" AS S, "WYPOZYCZALNIA", "PLACOWKA", "DANE KONTAKTOWE" AS D
-WHERE S."id_WYPOZYCZALNIA" = "WYPOZYCZALNIA".id AND "WYPOZYCZALNIA"."id_PLACOWKA" = "PLACOWKA"."id"
-	AND "PLACOWKA"."id_DANE KONTAKTOWE" = D.id
-	AND S."rocznik" < Extract(year from CURRENT_DATE)-2;
+FROM "SAMOCHOD" AS S LEFT JOIN "WYPOZYCZALNIA" ON S."id_WYPOZYCZALNIA" = "WYPOZYCZALNIA".id LEFT JOIN "PLACOWKA" ON "WYPOZYCZALNIA"."id_PLACOWKA" = "PLACOWKA"."id" 
+	LEFT JOIN  "DANE KONTAKTOWE" AS D ON "PLACOWKA"."id_DANE KONTAKTOWE" = D.id
+WHERE  S."rocznik" < Extract(year from CURRENT_DATE)-2;
