@@ -42,7 +42,7 @@ $func$
 LANGUAGE plpgsql;
 
 
-create type czesc_type as (rodzaj character varying(32), info character varying(50), ilosc integer);
+create type czesc_type as (id integer, rodzaj character varying(32), info character varying(50), ilosc integer);
 
 CREATE OR REPLACE FUNCTION  stanMagazynowy(placowka int) 
 RETURNS SETOF czesc_type AS
@@ -51,18 +51,16 @@ declare
 r czesc_type%rowtype;
 BEGIN
 	FOR r IN 	
-		SELECT RCE."rodzaj", CE."info", CE."ilosc"
-		FROM "PLACOWKA" AS P LEFT JOIN "SERWIS MAGAZYN" AS SM ON P."id" = SM."id_PLACOWKA" LEFT JOIN "SERWIS_MAGAZYN_CZESC_EKSPLOATACYJNA" AS SMCE ON SM."id" = SMCE."id_SERWIS MAGAZYN" LEFT JOIN 
-		 "CZESC EKSPLOATACYJNA" AS CE ON SMCE."id_CZESC EKSPLOATACYJNA" = CE."id" LEFT JOIN "RODZAJ CZESCI EKSPLOATACYJNEJ" AS RCE ON CE."id_RODZAJ CZESCI EKSPLOATACYJNEJ" = RCE."id"
-		WHERE P."id" = placowka
+		SELECT *
+		FROM "CZESCI SAMOCHODOWE W PLACOWCE" 
+		WHERE "CZESCI SAMOCHODOWE W PLACOWCE"."id" = placowka
 	LOOP
 		RETURN NEXT r;
 	END LOOP;
 	FOR r IN 	
-		SELECT RCS."rodzaj", CS."info", CS."ilosc"
-		FROM "PLACOWKA" AS P LEFT JOIN "SERWIS MAGAZYN" AS SM ON P."id" = SM."id_PLACOWKA" LEFT JOIN "SERWIS_MAGAZYN_CZESC_SAMOCHODOWA" AS SMCS ON SM."id" = SMCS."id_SERWIS MAGAZYN" LEFT JOIN 
-		 "CZESC SAMOCHODOWA" AS CS ON SMCS."id_CZESC SAMOCHODOWA" = CS."id" LEFT JOIN "RODZAJ CZESCI SAMOCHODOWEJ" AS RCS ON CS."id_RODZAJ CZESCI SAMOCHODOWEJ" = RCS."id"
-		WHERE P."id" = placowka
+		SELECT *
+		FROM "CZESCI EKSPLOATACYJNE W PLACOWCE" 
+		WHERE "CZESCI EKSPLOATACYJNE W PLACOWCE"."id" = placowka
 	LOOP
 		RETURN NEXT r;
 	END LOOP;
