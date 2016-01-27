@@ -37,3 +37,15 @@ GROUP BY "DANE KONTAKTOWE"."miasto";
 SELECT *
  FROM "SAMOCHOD"
  WHERE "rocznik" > 2012 AND "moc" < 300 AND "moc" > 200 AND "kolor" = 'rozowy';
+ 
+
+--Wszystkie samochody ktore nie sa wypozyczone i sa okreslonej marki
+SELECT * FROM "SAMOCHOD"
+WHERE "SAMOCHOD"."czy_wypozyczony" = FALSE 
+and "SAMOCHOD"."marka" = 'TaTa';
+
+--Wszystkie samochody ktorych ilosc napraw jest wieksza rowna 3
+SELECT "SAMOCHOD"."id", "SAMOCHOD"."rodzaj", "SAMOCHOD"."marka", COUNT(*) AS "ilosc napraw" FROM "HISTORIA NAPRAWY"
+LEFT JOIN "SAMOCHOD" ON "SAMOCHOD"."id" = "HISTORIA NAPRAWY"."id_SAMOCHOD"
+GROUP BY "SAMOCHOD"."id", "SAMOCHOD"."rodzaj", "SAMOCHOD"."marka"
+HAVING COUNT(*) >= 3;
