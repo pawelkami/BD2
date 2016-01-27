@@ -32,3 +32,8 @@ SELECT "DANE KONTAKTOWE"."miasto", COUNT(*) AS "ilosc" FROM "PRACOWNIK"
 LEFT JOIN "PLACOWKA" ON "PLACOWKA"."id" = "PRACOWNIK"."id_PLACOWKA"
 LEFT JOIN "DANE KONTAKTOWE" ON "PLACOWKA"."id" = "DANE KONTAKTOWE"."id"
 GROUP BY "DANE KONTAKTOWE"."miasto";
+
+-- do indexow
+SELECT *
+ FROM "SAMOCHOD"
+ WHERE "rocznik" > 2012 AND "moc" < 300 AND "moc" > 200 AND "kolor" = 'rozowy';
