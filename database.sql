@@ -1,20 +1,3 @@
-﻿-- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.8.1
--- PostgreSQL version: 9.4
--- Project Site: pgmodeler.com.br
--- Model Author: ---
-
-
--- Database creation must be done outside an multicommand file.
--- These commands were put in this file only for convenience.
--- -- object: new_database | type: DATABASE --
--- -- DROP DATABASE IF EXISTS new_database;
--- CREATE DATABASE new_database
--- 	CONNECTION LIMIT = 0
--- ;
--- -- ddl-end --
--- 
-
 --Sequences Initial
 CREATE SEQUENCE BadaniaOkresoweSeq;
 CREATE SEQUENCE CzescEksploatacyjnaSeq;
@@ -983,10 +966,12 @@ REFERENCES public."CZESC SAMOCHODOWA" (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
--- TRIGERS:
+-- TRIGGERS:
 
 --1.
-INSERT INTO "public"."WYPOZYCZENIE"(data_wypozyczenia, "id_SAMOCHOD", "id_KLIENT INDYWIDUALNY", "id_KLIENT INSTYTUCJONALNY")VALUES ('2010-10-23 18:45:33', 332, NULL, 2410);
+
+--1.
+ALTER TABLE "WYPOZYCZENIE" ADD COLUMN czas_wypozyczenia interval;
 
 CREATE OR REPLACE FUNCTION set_czas_wypozyczenia() 
 RETURNS TRIGGER 

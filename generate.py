@@ -142,9 +142,9 @@ def generateDANE_KONTAKTOWE(data, count):
       numer_domu = str(random.randint(0, 1000))
       numer_lokalu = str(random.randint(0, 200))
       telefon = str( random.randint(100000000, 999999999) )
-      query = "INSERT INTO \"public\".\"DANE KONTAKTOWE\" (\"id\", \"ulica\", \"numer domu\", \"numer lokalu\", \"telefon\", \"miasto\") " \
-              "VALUES(%s, '%s', %s, %s, '%s', '%s' );\n" \
-              % (str(i), ulica, numer_domu, numer_lokalu, telefon, miasto)
+      query = "INSERT INTO \"public\".\"DANE KONTAKTOWE\" (\"ulica\", \"numer domu\", \"numer lokalu\", \"telefon\", \"miasto\") " \
+              "VALUES('%s', %s, %s, '%s', '%s' );\n" \
+              % (ulica, numer_domu, numer_lokalu, telefon, miasto)
       data += query
 
   global DANE_KONTAKTOWE_count
@@ -158,9 +158,9 @@ def generateKLIENT_INDYWIDUALNY(data, count):
         firstname = firstnames[random.randint(0, len(firstnames)-1)]
         lastname = lastnames[random.randint(0, len(lastnames)-1)]
         login = firstname + str(random.randint(1, 99999))
-        query = "INSERT INTO \"public\".\"KLIENT INDYWIDUALNY\" (\"id\", \"login\", \"haslo\", \"id_DANE KONTAKTOWE\", \"imie\", \"nazwisko\") " \
-                "VALUES(%s, '%s', '%s', %s, '%s', '%s' );\n" \
-                % (str(i), login, haslo, str(i), firstname, lastname)
+        query = "INSERT INTO \"public\".\"KLIENT INDYWIDUALNY\" (\"login\", \"haslo\", \"id_DANE KONTAKTOWE\", \"imie\", \"nazwisko\") " \
+                "VALUES('%s', '%s', %s, '%s', '%s' );\n" \
+                % (login, haslo, str(i), firstname, lastname)
         data += query
 
     global KLIENT_INDYWIDUALNY_count
@@ -170,28 +170,28 @@ def generateKLIENT_INDYWIDUALNY(data, count):
 
 def generatePLACOWKA(data, count):
     for i in xrange(1, count+1):
-        query = "INSERT INTO \"public\".\"PLACOWKA\"(id, \"id_DANE KONTAKTOWE\") " \
-                "VALUES (%s, %s);\n" \
-                % (str(i), str(i))
+        query = "INSERT INTO \"public\".\"PLACOWKA\"(\"id_DANE KONTAKTOWE\") " \
+                "VALUES (%s);\n" \
+                % (str(i))
         data += query
 
         data += generateDYREKTOR(i)
 
-        query = "INSERT INTO \"public\".\"WYPOZYCZALNIA\"(id, \"id_PLACOWKA\") " \
-                "VALUES (%s, %s);\n" \
-                % (str(i), str(i))
+        query = "INSERT INTO \"public\".\"WYPOZYCZALNIA\"(\"id_PLACOWKA\") " \
+                "VALUES (%s);\n" \
+                % (str(i))
 
         data += query
 
-        query = "INSERT INTO \"public\".\"SERWIS\"(id, \"id_PLACOWKA\") " \
-                "VALUES (%s, %s);\n" \
-                % (str(i), str(i))
+        query = "INSERT INTO \"public\".\"SERWIS\"(\"id_PLACOWKA\") " \
+                "VALUES (%s);\n" \
+                % (str(i))
 
         data += query
 
-        query = "INSERT INTO \"public\".\"SERWIS MAGAZYN\"(id, \"id_PLACOWKA\") " \
-                "VALUES (%s, %s);\n" \
-                % (str(i), str(i))
+        query = "INSERT INTO \"public\".\"SERWIS MAGAZYN\"(\"id_PLACOWKA\") " \
+                "VALUES (%s);\n" \
+                % (str(i))
 
         data += query
 
@@ -210,18 +210,18 @@ def generateDYREKTOR(id):
     login = firstname + str(random.randint(1, 99999))
     haslo = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for j in range(10))
     data_zmiany_hasla = generateTimestamp()
-    query = "INSERT INTO \"public\".\"DYREKTOR\"(id, imie, nazwisko, \"PESEL\", \"id_DANE KONTAKTOWE\", \"id_PLACOWKA\", login, haslo, data_zmiany_hasla) " \
-            "VALUES (%s, '%s', '%s', '%s', %s, %s, '%s', '%s', '%s');\n" \
-            % (str(id), firstname, lastname, pesel, dane_kontaktowe, str(id), login, haslo, data_zmiany_hasla)
+    query = "INSERT INTO \"public\".\"DYREKTOR\"(imie, nazwisko, \"PESEL\", \"id_DANE KONTAKTOWE\", \"id_PLACOWKA\", login, haslo, data_zmiany_hasla) " \
+            "VALUES ('%s', '%s', '%s', %s, %s, '%s', '%s', '%s');\n" \
+            % (firstname, lastname, pesel, dane_kontaktowe, str(id), login, haslo, data_zmiany_hasla)
 
     return query
 
 
 def generateZGLOSZENIE(data, count):
     for i in xrange(1, count+1):
-        query = "INSERT INTO \"public\".\"ZGLOSZENIE\"(id, \"id_SERWIS\", priorytet) " \
-                "VALUES (%s, %s, %s);\n" \
-                % (str(i), str(random.randint(1, SERWIS_count)), str(random.randint(0,2)))
+        query = "INSERT INTO \"public\".\"ZGLOSZENIE\"(\"id_SERWIS\", priorytet) " \
+                "VALUES (%s, %s);\n" \
+                % (str(random.randint(1, SERWIS_count)), str(random.randint(0,2)))
 
         data += query
 
@@ -229,41 +229,41 @@ def generateZGLOSZENIE(data, count):
             global BADANIE_OKRESOWE_count
             BADANIE_OKRESOWE_count += 1
 
-            query = "INSERT INTO \"public\".\"BADANIE OKRESOWE\"(id, \"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
-                    "VALUES (%s, %s, %s, %s); \n" \
-                    % (str(BADANIE_OKRESOWE_count), str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)])
+            query = "INSERT INTO \"public\".\"BADANIE OKRESOWE\"(\"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
+                    "VALUES (%s, %s, %s); \n" \
+                    % (str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)])
 
         elif i % 4 == 1: # NAPRAWA
             global NAPRAWA_count
             NAPRAWA_count += 1
 
-            query = "INSERT INTO \"public\".\"NAPRAWA\"(id, \"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
-                    "VALUES (%s, %s, %s, %s);\n" \
-                    % (str(NAPRAWA_count), str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)])
+            query = "INSERT INTO \"public\".\"NAPRAWA\"(\"id_ZGLOSZENIE\", myjnia, jazda_probna) " \
+                    "VALUES (%s, %s, %s);\n" \
+                    % (str(i), boolean_array[random.randint(0,1)], boolean_array[random.randint(0,1)])
 
 
         elif i % 4 == 2: # PRZYGOTOWANIE DO SEZONU
             global PRZYGOTOWANIE_DO_SEZONU_count
             PRZYGOTOWANIE_DO_SEZONU_count += 1
 
-            query = "INSERT INTO \"public\".\"PRZYGOTOWANIE DO SEZONU\"(id, \"id_ZGLOSZENIE\") " \
-                    "VALUES (%s, %s);\n" \
-                    % (str(PRZYGOTOWANIE_DO_SEZONU_count), str(i))
+            query = "INSERT INTO \"public\".\"PRZYGOTOWANIE DO SEZONU\"(\"id_ZGLOSZENIE\") " \
+                    "VALUES (%s);\n" \
+                    % (str(i))
 
         elif i % 4 == 3:
             global ZAMOWIENIE_WEWNETRZNE_count
             ZAMOWIENIE_WEWNETRZNE_count += 1
-            query = "INSERT INTO \"public\".\"ZAMOWIENIE WEWNETRZNE\"(id, \"id_ZGLOSZENIE\", \"id_SERWIS MAGAZYN\", \"id_PRACOWNIK SZEREGOWY\")" \
-                    "VALUES (%s, %s, %s, %s);\n" \
-                    % (str(ZAMOWIENIE_WEWNETRZNE_count), str(i), str(random.randint(1, SERWIS_MAGAZYN_count)),
+            query = "INSERT INTO \"public\".\"ZAMOWIENIE WEWNETRZNE\"(\"id_ZGLOSZENIE\", \"id_SERWIS MAGAZYN\", \"id_PRACOWNIK SZEREGOWY\")" \
+                    "VALUES (%s, %s, %s);\n" \
+                    % (str(i), str(random.randint(1, SERWIS_MAGAZYN_count)),
                        str(random.randint(1, PRACOWNIK_SZEREGOWY_count)))
 
         data += query
 
         if i % 4 != 3:
-            query = "INSERT INTO \"public\".\"RAPORT\"(id, \"id_ZGLOSZENIE\", \"id_PRACOWNIK SZEREGOWY\", data) " \
-                    "VALUES (%s, %s, %s, '%s');\n" \
-                    % (str(i), str(i), str(random.randint(1, PRACOWNIK_SZEREGOWY_count)), generateTimestamp())
+            query = "INSERT INTO \"public\".\"RAPORT\"(\"id_ZGLOSZENIE\", \"id_PRACOWNIK SZEREGOWY\", data) " \
+                    "VALUES (%s, %s, '%s');\n" \
+                    % (str(i), str(random.randint(1, PRACOWNIK_SZEREGOWY_count)), generateTimestamp())
             data += query
 
     global ZGLOSZENIE_count
@@ -281,10 +281,10 @@ def generateKIEROWNIK(data, count):
         data_zmiany_hasla = generateTimestamp()
         placowka = str(random.randint(1,PLACOWKA_count))
         dzial = rodzaj_dzialu[random.randint(0, len(rodzaj_dzialu) - 1)]
-        query = "INSERT INTO \"public\".\"KIEROWNIK\"(id, imie, nazwisko, \"PESEL\", \"id_DANE KONTAKTOWE\", " \
+        query = "INSERT INTO \"public\".\"KIEROWNIK\"(imie, nazwisko, \"PESEL\", \"id_DANE KONTAKTOWE\", " \
                 "\"id_PLACOWKA\", login, haslo, data_zmiany_hasla, \"id_DYREKTOR\", dzial) " \
-                "VALUES (%s, '%s', '%s', '%s', %s, %s, '%s', '%s', '%s', %s, '%s');\n" \
-                % (str(i), firstname, lastname, pesel, dane_kontaktowe,
+                "VALUES ('%s', '%s', '%s', %s, %s, '%s', '%s', '%s', %s, '%s');\n" \
+                % (firstname, lastname, pesel, dane_kontaktowe,
                    placowka, login, haslo, data_zmiany_hasla, placowka, dzial )
         data += query
 
@@ -299,10 +299,10 @@ def generateKIEROWNIK(data, count):
             login = firstname + str(random.randint(1, 99999))
             haslo = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for j in range(10))
             data_zmiany_hasla = generateTimestamp()
-            pracownik_query = "INSERT INTO \"public\".\"PRACOWNIK SZEREGOWY\"(id, imie, nazwisko, \"PESEL\", " \
+            pracownik_query = "INSERT INTO \"public\".\"PRACOWNIK SZEREGOWY\"(imie, nazwisko, \"PESEL\", " \
                               "\"id_DANE KONTAKTOWE\", \"id_PLACOWKA\", login, haslo, data_zmiany_hasla, dzial, \"id_KIEROWNIK\")" \
-                              " VALUES (%s, '%s', '%s', '%s', %s, %s, '%s', '%s', '%s', '%s', %s);\n" \
-                              % (str(PRACOWNIK_SZEREGOWY_count), firstname, lastname,
+                              " VALUES ('%s', '%s', '%s', %s, %s, '%s', '%s', '%s', '%s', %s);\n" \
+                              % (firstname, lastname,
                                  pesel, dane_kontaktowe, placowka, login, haslo, data_zmiany_hasla, dzial, str(i) )
             data += pracownik_query
 
@@ -321,10 +321,10 @@ def generateKLIENT_INSTYTUCJONALNY(data, count):
         regon = random.randint(10000000000000, 99999999999999)
         nip = random.randint(1000000000, 9999999999)
         pracownik_szeregowy = random.randint(1, PRACOWNIK_SZEREGOWY_count)
-        query = "INSERT INTO \"public\".\"KLIENT INSTYTUCJONALNY\"(id, login, haslo, \"id_DANE KONTAKTOWE\", " \
+        query = "INSERT INTO \"public\".\"KLIENT INSTYTUCJONALNY\"(login, haslo, \"id_DANE KONTAKTOWE\", " \
                 "\"NIP\", \"REGON\", \"id_PRACOWNIK SZEREGOWY\")" \
-                "VALUES (%s, '%s', '%s', %s, '%s', '%s', %s);\n" \
-                % (str(i), login, haslo, dane_kontaktowe, str(nip), str(regon), str(pracownik_szeregowy) )
+                "VALUES ('%s', '%s', %s, '%s', '%s', %s);\n" \
+                % (login, haslo, dane_kontaktowe, str(nip), str(regon), str(pracownik_szeregowy) )
         data += query
 
     global KLIENT_INSTYTUCJONALNY_count
@@ -342,10 +342,10 @@ def generateZGLOSZENIE_ZEWNETRZNE(data):
             klient_indywidualny = str(random.randint(1, KLIENT_INDYWIDUALNY_count))
             klient_instytucjonalny = "NULL"
 
-        query = "INSERT INTO \"public\".\"ZGLOSZENIE ZEWNETRZNE\"(id, \"id_ZGLOSZENIE\", \"id_KLIENT INSTYTUCJONALNY\"," \
+        query = "INSERT INTO \"public\".\"ZGLOSZENIE ZEWNETRZNE\"(\"id_ZGLOSZENIE\", \"id_KLIENT INSTYTUCJONALNY\"," \
                 "\"id_KLIENT INDYWIDUALNY\") " \
-                "VALUES (%s, %s, %s, %s);\n" \
-                % (str(i), str(i), klient_instytucjonalny, klient_indywidualny)
+                "VALUES (%s, %s, %s);\n" \
+                % (str(i), klient_instytucjonalny, klient_indywidualny)
 
         data += query
     global ZGLOSZENIE_ZEWNETRZNE_count
@@ -355,9 +355,9 @@ def generateZGLOSZENIE_ZEWNETRZNE(data):
 
 def generateZEWNETRZNY_DOSTAWCA(data):
     for i in xrange(0, len(cars)-1):
-        query = "INSERT INTO \"public\".\"ZEWNETRZNY DOSTAWCA\"(id, nazwa) " \
-                "VALUES (%s, '%s');\n" \
-                % (str(i+1), cars[i])
+        query = "INSERT INTO \"public\".\"ZEWNETRZNY DOSTAWCA\"(nazwa) " \
+                "VALUES ('%s');\n" \
+                % (cars[i])
 
         data += query
     global ZEWNETRZNY_DOWSTAWCA_count
@@ -367,9 +367,9 @@ def generateZEWNETRZNY_DOSTAWCA(data):
 
 def generateZAMOWIENIE_ZEWNETRZNE(data, count):
     for i in xrange(1, count + 1):
-        query = "INSERT INTO \"public\".\"ZAMOWIENIE ZEWNETRZNE\"(id, \"id_SERWIS MAGAZYN\") " \
-                "VALUES (%s, %s);\n" \
-                % (str(i), str(random.randint(1, SERWIS_MAGAZYN_count)))
+        query = "INSERT INTO \"public\".\"ZAMOWIENIE ZEWNETRZNE\"(\"id_SERWIS MAGAZYN\") " \
+                "VALUES (%s);\n" \
+                % (str(random.randint(1, SERWIS_MAGAZYN_count)))
 
         data += query
 
@@ -386,19 +386,19 @@ def generateZAMOWIENIE_ZEWNETRZNE(data, count):
 def generateCZESCI_SAMOCHODOWE(data, count):
     i = 1
     for key in czesc_samochodowa:
-        query = "INSERT INTO \"public\".\"RODZAJ CZESCI SAMOCHODOWEJ\"(id, rodzaj) " \
-                "VALUES (%s, '%s');\n" \
-                % (str(i), key)
+        query = "INSERT INTO \"public\".\"RODZAJ CZESCI SAMOCHODOWEJ\"(rodzaj) " \
+                "VALUES ('%s');\n" \
+                % (key)
 
         data += query
 
-        for j in xrange(0, count):
+        for j in xrange(1, count):
             list = czesc_samochodowa[key]
             description = list[random.randint(0, len(list)-1)]
-            czesc_query = "INSERT INTO \"public\".\"CZESC SAMOCHODOWA\"(id, \"id_RODZAJ CZESCI SAMOCHODOWEJ\", info, " \
+            czesc_query = "INSERT INTO \"public\".\"CZESC SAMOCHODOWA\"(\"id_RODZAJ CZESCI SAMOCHODOWEJ\", info, " \
                           "ilosc, \"id_ZAMOWIENIE WEWNETRZNE\") " \
-                          "VALUES (%s, %s, '%s', %s, %s);\n" \
-                          % (str((i-1)*count + j), str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
+                          "VALUES (%s, '%s', %s, %s);\n" \
+                          % (str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
             data += czesc_query
 
             serwismagazyn_czesc = "INSERT INTO \"SERWIS_MAGAZYN_CZESC_SAMOCHODOWA\"" \
@@ -423,19 +423,19 @@ def generateCZESCI_SAMOCHODOWE(data, count):
 def generateCZESCI_EKSPLOATACYJNE(data, count):
     i = 1
     for key in czesc_eksploatacyjna:
-        query = "INSERT INTO \"public\".\"RODZAJ CZESCI EKSPLOATACYJNEJ\"(id, rodzaj) " \
-                "VALUES (%s, '%s');\n" \
-                % (str(i), key)
+        query = "INSERT INTO \"public\".\"RODZAJ CZESCI EKSPLOATACYJNEJ\"(rodzaj) " \
+                "VALUES ('%s');\n" \
+                % (key)
 
         data += query
 
-        for j in xrange(0, count):
+        for j in xrange(1, count):
             list = czesc_eksploatacyjna[key]
             description = list[random.randint(0, len(list)-1)]
-            czesc_query = "INSERT INTO \"public\".\"CZESC EKSPLOATACYJNA\"(id, \"id_RODZAJ CZESCI EKSPLOATACYJNEJ\", info, " \
+            czesc_query = "INSERT INTO \"public\".\"CZESC EKSPLOATACYJNA\"(\"id_RODZAJ CZESCI EKSPLOATACYJNEJ\", info, " \
                           "ilosc, \"id_ZAMOWIENIE WEWNETRZNE\") " \
-                          "VALUES (%s, %s, '%s', %s, %s);\n" \
-                          % (str((i-1)*count + j), str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
+                          "VALUES (%s, '%s', %s, %s);\n" \
+                          % (str(i), description, str(random.randint(1,999)), str(random.randint(1, ZAMOWIENIE_WEWNETRZNE_count)))
             data += czesc_query
 
             serwismagazyn_czesc = "INSERT INTO \"SERWIS_MAGAZYN_CZESC_EKSPLOATACYJNA\"" \
@@ -467,10 +467,10 @@ def generateSAMOCHOD(data, count):
         cena = str(random.randint(50, 3000))
         wartosc = str(random.randint(5000, 250000))
         czy_wypozyczony = boolean_array[random.randint(0,len(boolean_array)-1)]
-        query = "INSERT INTO \"public\".\"SAMOCHOD\"(id, rodzaj, moc, kolor, rocznik, automatyczna_skrzynia, pojemnosc_silnika, " \
+        query = "INSERT INTO \"public\".\"SAMOCHOD\"(rodzaj, moc, kolor, rocznik, automatyczna_skrzynia, pojemnosc_silnika, " \
                 "marka, model, data_przegladu, \"id_WYPOZYCZALNIA\", cena_za_dzien, czy_wypozyczony, wartosc) " \
-                "VALUES (%s, '%s', %s, '%s', %s, %s, %s, '%s', '%s', '%s', %s, %s, %s, %s);\n" \
-                % (str(i), rodzaj, moc, color, rocznik, automat, pojemnosc, marka, model_samochodu, generateTimestamp(),
+                "VALUES ('%s', %s, '%s', %s, %s, %s, '%s', '%s', '%s', %s, %s, %s, %s);\n" \
+                % (rodzaj, moc, color, rocznik, automat, pojemnosc, marka, model_samochodu, generateTimestamp(),
                    wypozyczalnia, cena, czy_wypozyczony, wartosc)
 
         data += query
@@ -511,9 +511,9 @@ def generateREZERWACJA(data, count):
 def generateHISTORIA_NAPRAWY(data):
     for i in xrange(1, NAPRAWA_count+1):
         opis = historia_naprawy[random.randint(0, len(historia_naprawy)-1)]
-        query = "INSERT INTO \"public\".\"HISTORIA NAPRAWY\"(id, \"id_SAMOCHOD\", opis, data, \"id_NAPRAWA\") " \
-                "VALUES (%s, %s, '%s', '%s', %s);\n" \
-                % (str(i), random.randint(1, SAMOCHOD_count), opis, generateTimestamp(), str(i))
+        query = "INSERT INTO \"public\".\"HISTORIA NAPRAWY\"(\"id_SAMOCHOD\", opis, data, \"id_NAPRAWA\") " \
+                "VALUES (%s, '%s', '%s', %s);\n" \
+                % (random.randint(1, SAMOCHOD_count), opis, generateTimestamp(), str(i))
 
         data += query
     return data
@@ -523,11 +523,11 @@ def generateSKIEROWANIE_NA_BADANIE(data, count):
         pracownik = str(random.randint(1, PRACOWNIK_SZEREGOWY_count))
         samochod = str(random.randint(1, SAMOCHOD_count))
         czy_zaakceptowano = boolean_array[random.randint(0,1)]
-        query = "INSERT INTO \"public\".\"SKIEROWANIE NA BADANIE\"(id, czy_zaakceptowano, \"id_KIEROWNIK\", " \
+        query = "INSERT INTO \"public\".\"SKIEROWANIE NA BADANIE\"(czy_zaakceptowano, \"id_KIEROWNIK\", " \
                 "\"id_PRACOWNIK SZEREGOWY\", \"id_SERWIS\", \"id_SAMOCHOD\")" \
-                "SELECT %s, %s, \"PRACOWNIK SZEREGOWY\".\"id_KIEROWNIK\", id, \"PRACOWNIK SZEREGOWY\".\"id_PLACOWKA\", %s " \
+                "SELECT %s, \"PRACOWNIK SZEREGOWY\".\"id_KIEROWNIK\", id, \"PRACOWNIK SZEREGOWY\".\"id_PLACOWKA\", %s " \
                 "FROM \"PRACOWNIK SZEREGOWY\" WHERE id=%s;\n"\
-                % (str(i), czy_zaakceptowano, samochod, pracownik)
+                % (czy_zaakceptowano, samochod, pracownik)
 
         data += query
     global SKIEROWANIE_NA_BADANIE_count
@@ -537,15 +537,13 @@ def generateSKIEROWANIE_NA_BADANIE(data, count):
 def generateWYPOZYCZENIE(data, count):
     for i in xrange(1, count+1):
         data_wypozyczenia = generateTimestamp()
-        data_zwrotu = addToTimestamp(data_wypozyczenia, random.randint(1,28), random.randint(1, 12), random.randint(0,1))
+        data_zwrotu = addToTimestamp(data_wypozyczenia, random.randint(1,28), random.randint(1, 3), 0)
 
         if i >= SAMOCHOD_count:
             count = i
             break
 
         samochod = str(i)
-
-
 
         klient_instytucjonalny = "NULL"
         klient_indywidualny = "NULL"
@@ -555,10 +553,10 @@ def generateWYPOZYCZENIE(data, count):
         else:
             klient_instytucjonalny = str(random.randint(1, KLIENT_INSTYTUCJONALNY_count))
 
-        query = "INSERT INTO \"public\".\"WYPOZYCZENIE\"(id, data_wypozyczenia, data_zwrotu, \"id_SAMOCHOD\", " \
+        query = "INSERT INTO \"public\".\"WYPOZYCZENIE\"(data_wypozyczenia, data_zwrotu, \"id_SAMOCHOD\", " \
                 "\"id_KLIENT INDYWIDUALNY\", \"id_KLIENT INSTYTUCJONALNY\")" \
-                "VALUES (%s, '%s', '%s', %s, %s, %s);\n" \
-                % (str(i), data_wypozyczenia, data_zwrotu, samochod, klient_indywidualny, klient_instytucjonalny )
+                "VALUES ('%s', '%s', %s, %s, %s);\n" \
+                % (data_wypozyczenia, data_zwrotu, samochod, klient_indywidualny, klient_instytucjonalny )
 
         data += query
 
