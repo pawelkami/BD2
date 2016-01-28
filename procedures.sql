@@ -79,3 +79,31 @@ BEGIN
 END
 $func$
 LANGUAGE plpgsql;
+
+
+--PROCEDURA ZMIENIA HASLO FLAGI 'K' - KIERWONIK, 'D' - DYREKTOR, 'S' - SZEREGOWY
+CREATE OR REPLACE FUNCTION zmienHaslo (ktory varchar(1), haslonew varchar(10), myid int)  
+RETURNS boolean AS
+$func$
+declare
+srednia int;
+BEGIN
+	IF ktory = 'D' THEN
+	UPDATE "DYREKTOR"
+	SET "haslo" = haslonew
+	WHERE "id" = myid;
+	END IF;
+	IF ktory = 'S' THEN
+	UPDATE "PRACOWNIK SZEREGOWY"
+	SET "haslo" = haslonew
+	WHERE "id" = myid;
+	END IF;
+	IF ktory = 'K' THEN
+	UPDATE "KIEROWNIK"
+	SET "haslo" = haslonew
+	WHERE "id" = myid;
+	END IF;
+	RETURN TRUE;
+END
+$func$
+LANGUAGE plpgsql;
