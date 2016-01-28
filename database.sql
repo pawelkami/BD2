@@ -972,4 +972,34 @@ BEFORE INSERT OR UPDATE ON "WYPOZYCZENIE"
 FOR EACH ROW 
   EXECUTE PROCEDURE set_czas_wypozyczenia();
   
+ALTER TABLE "KLIENT INDYWIDUALNY" ADD COLUMN czy_wypozyczenie_aktywne boolean;
+
+CREATE OR REPLACE FUNCTION reset_czy_wypozyczenie_aktywne()
+RETURNS TRIGGER
+AS $$
+BEGIN
+  NEW.czy_wypozyczenie_aktywne := FALSE;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reset_czy_wypozyczenie_aktywne_klient_indywidualny
+BEFORE INSERT ON "KLIENT INDYWIDUALNY"
+FOR EACH ROW
+  EXECUTE PROCEDURE reset_czy_wypozyczenie_aktywne();
+
+
+CREATE OR REPLACE FUNCTION set_czy_wypozyczenie_aktywne()
+RETURNS TRIGGER
+AS $$
+BEGIN
+  UPDATE "KLIENT INDYWIDUALNY" SET czy_wypozyczenie_aktywne = TRUE
+  WHERE "id" = NEW."id_KLIENT INDYWIDUALNY";
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_czy_wypozyczenie_aktywne_klient_indywidualny
+BEFORE INSERT ON "WYPOZYCZENIE"
+FOR EACH ROW
+  EXECUTE PROCEDURE set_czy_wypozyczenie_aktywne();
+  
 
