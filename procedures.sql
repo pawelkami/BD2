@@ -65,3 +65,17 @@ BEGIN
 END
 $func$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION  przypiszPracownikaKlientowi(idPracownika int, idKlienta int) 
+RETURNS int AS
+$func$
+declare
+srednia int;
+BEGIN
+	UPDATE "KLIENT INSTYTUCJONALNY" 
+	SET "id_PRACOWNIK SZEREGOWY" = idPracownika
+	WHERE "id" = idKlienta;
+	RETURN idKlienta;
+END
+$func$
+LANGUAGE plpgsql;
