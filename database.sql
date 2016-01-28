@@ -1,4 +1,4 @@
--- Database generated with pgModeler (PostgreSQL Database Modeler).
+﻿-- Database generated with pgModeler (PostgreSQL Database Modeler).
 -- pgModeler  version: 0.8.1
 -- PostgreSQL version: 9.4
 -- Project Site: pgmodeler.com.br
@@ -16,34 +16,34 @@
 -- 
 
 --Sequences Initial
-CREATE SEQUENCE "BadaniaOkresoweSeq";
-CREATE SEQUENCE "CzescEksploatacyjnaSeq";
-CREATE SEQUENCE "CzescSamochodowaSeq";
-CREATE SEQUENCE "DaneKontaktoweSeq";
-CREATE SEQUENCE "DyrektorSeq";
-CREATE SEQUENCE "HistoriaNaprawySeq";
-CREATE SEQUENCE "KierownikSeq";
-CREATE SEQUENCE "KlientIndywidualnySeq";
-CREATE SEQUENCE "KlientInstytucjonalnySeq";
-CREATE SEQUENCE "NaprawaSeq";
-CREATE SEQUENCE "PlacowkaSeq";
-CREATE SEQUENCE "PracownikSzeregowySeq";
-CREATE SEQUENCE "PrzygotowanieDoSezonuSeq";
-CREATE SEQUENCE "RaportSeq";
-CREATE SEQUENCE "RezerwacjaSeq";
-CREATE SEQUENCE "RodzajCzesciEksploatacyjnejSeq";
-CREATE SEQUENCE "RodzajCzesciSamochodowejSeq";
-CREATE SEQUENCE "SamochodSeq";
-CREATE SEQUENCE "SerwisSeq";
-CREATE SEQUENCE "SerwisMagazynSeq";
-CREATE SEQUENCE "SkierowanieNaBadanieSeq";
-CREATE SEQUENCE "WypozyczalniaSeq";
-CREATE SEQUENCE "WypozyczenieSeq";
-CREATE SEQUENCE "ZamowienieWewnetrznySeq";
-CREATE SEQUENCE "ZamowienieZewnetrzneSeq";
-CREATE SEQUENCE "ZewnetrznyDostawcaSeq";
-CREATE SEQUENCE "ZgloszenieSeq";
-CREATE SEQUENCE "ZgloszenieZewnetrzneSeq";
+CREATE SEQUENCE BadaniaOkresoweSeq;
+CREATE SEQUENCE CzescEksploatacyjnaSeq;
+CREATE SEQUENCE CzescSamochodowaSeq;
+CREATE SEQUENCE DaneKontaktoweSeq;
+CREATE SEQUENCE DyrektorSeq;
+CREATE SEQUENCE HistoriaNaprawySeq;
+CREATE SEQUENCE KierownikSeq;
+CREATE SEQUENCE KlientIndywidualnySeq;
+CREATE SEQUENCE KlientInstytucjonalnySeq;
+CREATE SEQUENCE NaprawaSeq;
+CREATE SEQUENCE PlacowkaSeq;
+CREATE SEQUENCE PracownikSzeregowySeq;
+CREATE SEQUENCE PrzygotowanieDoSezonuSeq;
+CREATE SEQUENCE RaportSeq;
+CREATE SEQUENCE RezerwacjaSeq;
+CREATE SEQUENCE RodzajCzesciEksploatacyjnejSeq;
+CREATE SEQUENCE RodzajCzesciSamochodowejSeq;
+CREATE SEQUENCE SamochodSeq;
+CREATE SEQUENCE SerwisSeq;
+CREATE SEQUENCE SerwisMagazynSeq;
+CREATE SEQUENCE SkierowanieNaBadanieSeq;
+CREATE SEQUENCE WypozyczalniaSeq;
+CREATE SEQUENCE WypozyczenieSeq;
+CREATE SEQUENCE ZamowienieWewnetrznySeq;
+CREATE SEQUENCE ZamowienieZewnetrzneSeq;
+CREATE SEQUENCE ZewnetrznyDostawcaSeq;
+CREATE SEQUENCE ZgloszenieSeq;
+CREATE SEQUENCE ZgloszenieZewnetrzneSeq;
 
 -- object: public."KLIENT" | type: TABLE --
 -- DROP TABLE IF EXISTS public."KLIENT" CASCADE;
