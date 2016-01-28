@@ -576,6 +576,7 @@ if __name__ == "__main__":
     databaseScript = openFile("database.sql")
     procedures = openFile("procedures.sql")
     views = openFile("views.sql")
+    trigger = openFile("trigger.sql")
 	
     print("Podaj dane do zalogowania się na serwerze. W nawiasach są proponowane wartości.")
     dbname = raw_input("Nazwa nowej bazy danych[wypozyczalniaDB]: ").lower()
@@ -619,6 +620,7 @@ if __name__ == "__main__":
     print("Creating tables in database...")
     cur.execute(databaseScript)
     cur.execute(views)
+    cur.execute(trigger)
     cur.execute(procedures)
 
 
