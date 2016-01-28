@@ -983,4 +983,23 @@ REFERENCES public."CZESC SAMOCHODOWA" (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
+-- TRIGERS:
+
+--1.
+INSERT INTO "public"."WYPOZYCZENIE"(data_wypozyczenia, "id_SAMOCHOD", "id_KLIENT INDYWIDUALNY", "id_KLIENT INSTYTUCJONALNY")VALUES ('2010-10-23 18:45:33', 332, NULL, 2410);
+
+CREATE OR REPLACE FUNCTION set_czas_wypozyczenia() 
+RETURNS TRIGGER 
+AS $$
+BEGIN
+  NEW.czas_wypozyczenia := NEW.data_zwrotu - NEW.data_wypozyczenia;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER set_czas_wypozyczenia_wypozyczenie
+BEFORE INSERT OR UPDATE ON "WYPOZYCZENIE"
+FOR EACH ROW 
+  EXECUTE PROCEDURE set_czas_wypozyczenia();
+  
 
