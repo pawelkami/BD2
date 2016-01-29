@@ -564,6 +564,14 @@ def generateWYPOZYCZENIE(data, count):
     WYPOZYCZENIE_count = count
     return data
 
+def generateUserAdmin(username, password, dbname):
+    query = "DROP USER IF EXISTS %s; CREATE USER %s WITH PASSWORD '%s'; GRANT ALL PRIVILEGES ON DATABASE \"%s\" to %s;\n" % (username, username, password, dbname, username)
+    return query
+
+def generateUser(username, password):
+    query = "DROP USER IF EXISTS %s; CREATE USER %s WITH PASSWORD '%s'; GRANT SELECT ON ALL TABLES IN SCHEMA public TO %s;\n" \
+            % (username, username, password, username)
+    return query
 
 def openFile(filename):
     with open(filename) as f:
@@ -592,6 +600,9 @@ if __name__ == "__main__":
                     #"LC_COLLATE = \'pl_PL.utf8\' LC_CTYPE = \'pl_PL.utf8\' CONNECTION LIMIT = 0;\n" \
 
 
+    userAdmin = generateUserAdmin("testerAdmin", "test", dbname)
+    userGenerated = generateUser("tester", "test")
+    dbUsers = userAdmin + userGenerated
     print("Creating database...")
 
     # logujemy się do głównej bazy, żeby stworzyć nową bazę
@@ -617,15 +628,22 @@ if __name__ == "__main__":
 
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
+
+    print("Adding users...")
+    cur.execute(dbUsers)
     print("Creating tables in database...")
     cur.execute(databaseScript)
+    print("Adding views...")
     cur.execute(views)
+    print("Adding triggers...")
     cur.execute(trigger)
+
+    print("Adding procedures...")
     cur.execute(procedures)
 
 
     data = ""
-    print("Generating...")
+    print("Generating inserts...")
     data = generateDANE_KONTAKTOWE(data, 10000)
     data = generateKLIENT_INDYWIDUALNY(data, 10000)
     data = generatePLACOWKA(data, 200)
