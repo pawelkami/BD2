@@ -446,9 +446,9 @@ def generateCZESCI_EKSPLOATACYJNE(data, count):
 
             if random.randint(0,1):
                 zamowienie_zewnetrzne_czesc = "INSERT INTO \"ZAMOWIENIE_ZEWNETRZNE_CZESC_EKSPLOATACYJNA\"" \
-                                              "(\"id_ZAMOWIENIE ZEWNETRZNE\", \"id_CZESC EKSPLOATACYJNA\") " \
-                                              "VALUES (%s, %s)\n;" \
-                                              % (random.randint(1,ZAMOWIENIE_ZEWNETRZNE_count), str(j))
+                                              "(\"id_ZAMOWIENIE ZEWNETRZNE\", \"id_CZESC EKSPLOATACYJNA\", ilosc) " \
+                                              "VALUES (%s, %s, %s)\n;" \
+                                              % (random.randint(1,ZAMOWIENIE_ZEWNETRZNE_count), str(j), random.randint(1,20))
                 data += zamowienie_zewnetrzne_czesc
         i += 1
     return data
