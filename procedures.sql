@@ -107,3 +107,20 @@ BEGIN
 END
 $func$
 LANGUAGE plpgsql;
+
+--Procedura wypisujaca nieprzypisane zamowienia zewnetrzne do dostawcow zewnetrznych
+CREATE OR REPLACE FUNCTION  wypiszNieprzypisaneZamowieniaZew() 
+RETURNS TABLE
+(
+   "id_ZAMOWIENIE ZEWNETRZNE" integer,
+   "id_ZEWNETRZNY DOSTAWCA" integer,
+   "id zamowienia" integer,
+   "id_SERWIS MAGAZYN" integer
+) AS
+$func$
+BEGIN
+		RETURN QUERY
+		SELECT * FROM "ZAMOWIENIE_ZEWNETRZNE_ZEWNETRZNY_DOSTAWCA" AS ZD FULL JOIN "ZAMOWIENIE ZEWNETRZNE" AS Z ON Z."id" = ZD."id_ZAMOWIENIE ZEWNETRZNE" WHERE ZD."id_ZAMOWIENIE ZEWNETRZNE" IS NULL;
+END
+$func$
+LANGUAGE plpgsql;
