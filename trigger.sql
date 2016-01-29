@@ -61,7 +61,7 @@ END $$ LANGUAGE plpgsql;
 
 
 
--- Procedur¹ wypiszNieprzypisaneZamowieniaZew()  mo¿na sprawdziæ potem które zamowienia zewnetrzne trzeba przypisaæ dostawcom zewn
+-- Procedurï¿½ wypiszNieprzypisaneZamowieniaZew()  moï¿½na sprawdziï¿½ potem ktï¿½re zamowienia zewnetrzne trzeba przypisaï¿½ dostawcom zewn
 CREATE TRIGGER set_czy_wypozyczenie_aktywne_klient_indywidualny
 BEFORE INSERT ON "WYPOZYCZENIE"
 FOR EACH ROW
